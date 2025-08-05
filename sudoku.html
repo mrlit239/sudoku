@@ -1,0 +1,1712 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enhanced Sudoku</title>
+    <style>
+        :root {
+            /* Default Theme */
+            --bg-color: #f0f0f0;
+            --container-bg: #fff;
+            --text-color: #333;
+            --border-color: #000;
+            --cage-border-color: #666;
+            --selected-bg: #e3f2fd;
+            --selected-border: #2196f3;
+            --error-bg: #ffebee;
+            --error-border: #f44336;
+            --completed-bg: #e8f5e8;
+            --hover-bg: #f5f5f5;
+            --pre-filled-bg: #f8f9fa;
+            --user-filled-color: #007bff;
+            --hint-filled-color: #ff9800;
+            --hint-filled-bg: #fff3e0;
+            --cage-bg-1: rgba(255, 182, 193, 0.3);
+            --cage-bg-2: rgba(173, 216, 230, 0.3);
+            --cage-bg-3: rgba(144, 238, 144, 0.3);
+            --cage-bg-4: rgba(255, 218, 185, 0.3);
+            --cage-bg-5: rgba(221, 160, 221, 0.3);
+            --cage-bg-6: rgba(255, 255, 224, 0.3);
+            --cage-bg-7: rgba(255, 192, 203, 0.3);
+            --cage-bg-8: rgba(176, 224, 230, 0.3);
+        }
+
+        /* Ocean Theme */
+        .theme-ocean {
+            --bg-color: #0f3460;
+            --container-bg: #16537e;
+            --text-color: #94b3bd;
+            --border-color: #1e88e5;
+            --cage-border-color: #42a5f5;
+            --selected-bg: rgba(33, 150, 243, 0.3);
+            --selected-border: #2196f3;
+            --error-bg: rgba(244, 67, 54, 0.2);
+            --error-border: #f44336;
+            --completed-bg: rgba(76, 175, 80, 0.2);
+            --hover-bg: rgba(255, 255, 255, 0.1);
+            --pre-filled-bg: rgba(255, 255, 255, 0.1);
+            --user-filled-color: #64b5f6;
+            --hint-filled-color: #ffb74d;
+            --hint-filled-bg: rgba(255, 152, 0, 0.2);
+            --cage-bg-1: rgba(100, 181, 246, 0.2);
+            --cage-bg-2: rgba(129, 199, 132, 0.2);
+            --cage-bg-3: rgba(255, 183, 77, 0.2);
+            --cage-bg-4: rgba(240, 98, 146, 0.2);
+            --cage-bg-5: rgba(186, 104, 200, 0.2);
+            --cage-bg-6: rgba(255, 241, 118, 0.2);
+            --cage-bg-7: rgba(77, 208, 225, 0.2);
+            --cage-bg-8: rgba(165, 214, 167, 0.2);
+        }
+
+        /* Dark Theme */
+        .theme-dark {
+            --bg-color: #121212;
+            --container-bg: #1e1e1e;
+            --text-color: #b68d8d;
+            --border-color: #555;
+            --cage-border-color: #888;
+            --selected-bg: rgba(33, 150, 243, 0.3);
+            --selected-border: #2196f3;
+            --error-bg: rgba(244, 67, 54, 0.2);
+            --error-border: #f44336;
+            --completed-bg: rgba(76, 175, 80, 0.2);
+            --hover-bg: rgba(255, 255, 255, 0.1);
+            --pre-filled-bg: #2a2a2a;
+            --user-filled-color: #64b5f6;
+            --hint-filled-color: #ffb74d;
+            --hint-filled-bg: rgba(255, 152, 0, 0.2);
+            --cage-bg-1: rgba(244, 143, 177, 0.3);
+            --cage-bg-2: rgba(144, 202, 249, 0.3);
+            --cage-bg-3: rgba(165, 214, 167, 0.3);
+            --cage-bg-4: rgba(255, 204, 128, 0.3);
+            --cage-bg-5: rgba(206, 147, 216, 0.3);
+            --cage-bg-6: rgba(255, 245, 157, 0.3);
+            --cage-bg-7: rgba(240, 98, 146, 0.3);
+            --cage-bg-8: rgba(129, 212, 250, 0.3);
+        }
+
+        /* Sunset Theme */
+        .theme-sunset {
+            --bg-color: #ff6b35;
+            --container-bg: #ff8c42;
+            --text-color: #2d1b69;
+            --border-color: #2d1b69;
+            --cage-border-color: #142d69;
+            --selected-bg: rgba(45, 27, 105, 0.2);
+            --selected-border: #2d1b69;
+            --error-bg: rgba(139, 0, 0, 0.3);
+            --error-border: #8b0000;
+            --completed-bg: rgba(34, 139, 34, 0.3);
+            --hover-bg: rgba(255, 255, 255, 0.2);
+            --pre-filled-bg: rgba(255, 255, 255, 0.3);
+            --user-filled-color: #2d1b69;
+            --hint-filled-color: #8b0000;
+            --hint-filled-bg: rgba(255, 255, 255, 0.4);
+            --cage-bg-1: rgba(255, 182, 193, 0.5);
+            --cage-bg-2: rgba(255, 218, 185, 0.5);
+            --cage-bg-3: rgba(255, 255, 224, 0.5);
+            --cage-bg-4: rgba(221, 160, 221, 0.5);
+            --cage-bg-5: rgba(173, 216, 230, 0.5);
+            --cage-bg-6: rgba(144, 238, 144, 0.5);
+            --cage-bg-7: rgba(255, 192, 203, 0.5);
+            --cage-bg-8: rgba(176, 224, 230, 0.5);
+        }
+
+        /* Forest Theme */
+        .theme-forest {
+            --bg-color: #2d5016;
+            --container-bg: #3e6b1f;
+            --text-color: #b4cc9b;
+            --border-color: #6b8e23;
+            --cage-border-color: #9acd32;
+            --selected-bg: rgba(154, 205, 50, 0.3);
+            --selected-border: #9acd32;
+            --error-bg: rgba(220, 20, 60, 0.3);
+            --error-border: #dc143c;
+            --completed-bg: rgba(50, 205, 50, 0.3);
+            --hover-bg: rgba(255, 255, 255, 0.1);
+            --pre-filled-bg: rgba(255, 255, 255, 0.1);
+            --user-filled-color: #90ee90;
+            --hint-filled-color: #ffd700;
+            --hint-filled-bg: rgba(255, 215, 0, 0.2);
+            --cage-bg-1: rgba(144, 238, 144, 0.4);
+            --cage-bg-2: rgba(152, 251, 152, 0.4);
+            --cage-bg-3: rgba(173, 255, 47, 0.4);
+            --cage-bg-4: rgba(255, 255, 224, 0.4);
+            --cage-bg-5: rgba(240, 230, 140, 0.4);
+            --cage-bg-6: rgba(255, 228, 181, 0.4);
+            --cage-bg-7: rgba(222, 184, 135, 0.4);
+            --cage-bg-8: rgba(189, 183, 107, 0.4);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: linear-gradient(135deg, var(--bg-color), color-mix(in srgb, var(--bg-color) 80%, white));
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            color: var(--text-color);
+            transition: all 0.3s ease;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            color: var(--text-color);
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            font-size: 2.5em;
+        }
+
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+            align-items: center;
+        }
+
+        .theme-selector {
+            display: flex;
+            gap: 5px;
+            align-items: center;
+            margin-left: 20px;
+        }
+
+        .theme-option {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 3px solid transparent;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .theme-option:hover {
+            transform: scale(1.1);
+            border-color: var(--text-color);
+        }
+
+        .theme-option.active {
+            border-color: var(--text-color);
+            box-shadow: 0 0 10px rgba(255,255,255,0.5);
+        }
+
+        .theme-default { background: linear-gradient(45deg, #f0f0f0, #2196f3); }
+        .theme-ocean { background: linear-gradient(45deg, #0f3460, #1e88e5); }
+        .theme-dark { background: linear-gradient(45deg, #121212, #555); }
+        .theme-sunset { background: linear-gradient(45deg, #ff6b35, #2d1b69); }
+        .theme-forest { background: linear-gradient(45deg, #2d5016, #9acd32); }
+
+        select, button {
+            padding: 10px 15px;
+            font-size: 16px;
+            border-radius: 12px;
+            border: 2px solid var(--cage-border-color);
+            background-color: var(--container-bg);
+            color: var(--text-color);
+            transition: all 0.3s ease;
+        }
+
+        button {
+            cursor: pointer;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .game-info {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 10px;
+            font-size: 14px;
+            color: var(--text-color);
+            font-weight: 600;
+        }
+
+        .hints-remaining {
+            color: var(--hint-filled-color);
+        }
+
+        .mistakes-remaining {
+            color: var(--error-border);
+        }
+
+        .game-container {
+            display: flex;
+            gap: 30px;
+            align-items: flex-start;
+        }
+
+        .sudoku-container {
+            padding: 25px;
+            background: var(--container-bg);
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .sudoku-table {
+            border-collapse: collapse;
+            border: 4px solid var(--border-color);
+            background-color: var(--container-bg);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .sudoku-table td {
+            width: 55px;
+            height: 55px;
+            text-align: center;
+            position: relative;
+            border: 1px solid var(--cage-border-color);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .sudoku-table td.selected {
+            background-color: var(--selected-bg) !important;
+            border: 3px solid var(--selected-border);
+            transform: scale(1.05);
+            z-index: 10;
+            box-shadow: 0 0 15px rgba(33, 150, 243, 0.5);
+        }
+
+        .sudoku-table td:hover {
+            background-color: var(--hover-bg);
+            transform: scale(1.02);
+        }
+
+        .sudoku-table td.error {
+            background-color: var(--error-bg) !important;
+            border: 3px solid var(--error-border) !important;
+            animation: shake 0.5s ease-in-out;
+        }
+
+        .sudoku-table td.completed {
+            background-color: var(--completed-bg) !important;
+            animation: pulse 0.6s ease-in-out;
+        }
+
+        .sudoku-table td.cage-completed {
+            animation: glow 1s ease-in-out;
+        }
+
+        .sudoku-table td.box-completed {
+            animation: boxGlow 1.2s ease-in-out;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 0 5px var(--hint-filled-color); }
+            50% { box-shadow: 0 0 20px var(--hint-filled-color), 0 0 30px var(--hint-filled-color); }
+        }
+
+        @keyframes boxGlow {
+            0%, 100% { box-shadow: 0 0 5px var(--selected-border); }
+            50% { box-shadow: 0 0 25px var(--selected-border), 0 0 35px var(--selected-border); }
+        }
+
+        @keyframes numberPop {
+            0% { transform: scale(0.5); opacity: 0; }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .main-number {
+            font-size: 28px;
+            font-weight: bold;
+            color: var(--text-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            width: 100%;
+            transition: all 0.3s ease;
+        }
+
+        .main-number.new-input {
+            animation: numberPop 0.4s ease-out;
+        }
+
+        .pre-filled {
+            background-color: var(--pre-filled-bg);
+            font-weight: 900;
+        }
+
+        .user-filled {
+            color: var(--user-filled-color);
+            font-weight: 700;
+        }
+
+        .hint-filled {
+            color: var(--hint-filled-color);
+            background-color: var(--hint-filled-bg);
+            font-weight: 700;
+        }
+
+        .notes {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(3, 1fr);
+            width: 100%;
+            height: 100%;
+            font-size: 11px;
+            color: var(--text-color);
+            line-height: 1;
+            opacity: 0.7;
+        }
+
+        .note {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 500;
+        }
+
+        .cage-sum {
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            font-size: 11px;
+            color: var(--text-color);
+            font-weight: bold;
+            z-index: 2;
+            background-color: rgba(255,255,255,0.9);
+            border-radius: 4px;
+            padding: 2px 4px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+        }
+
+        .sudoku-table td:nth-child(3n) {
+            border-right: 4px solid var(--border-color);
+        }
+        .sudoku-table tr:nth-child(3n) td {
+            border-bottom: 4px solid var(--border-color);
+        }
+
+        /* Cage styling with different colors */
+        .cage-0 { background-color: var(--cage-bg-1) !important; }
+        .cage-1 { background-color: var(--cage-bg-2) !important; }
+        .cage-2 { background-color: var(--cage-bg-3) !important; }
+        .cage-3 { background-color: var(--cage-bg-4) !important; }
+        .cage-4 { background-color: var(--cage-bg-5) !important; }
+        .cage-5 { background-color: var(--cage-bg-6) !important; }
+        .cage-6 { background-color: var(--cage-bg-7) !important; }
+        .cage-7 { background-color: var(--cage-bg-8) !important; }
+
+        /* Repeat pattern for more cages */
+        .cage-8 { background-color: var(--cage-bg-1) !important; }
+        .cage-9 { background-color: var(--cage-bg-2) !important; }
+        .cage-10 { background-color: var(--cage-bg-3) !important; }
+        .cage-11 { background-color: var(--cage-bg-4) !important; }
+        .cage-12 { background-color: var(--cage-bg-5) !important; }
+        .cage-13 { background-color: var(--cage-bg-6) !important; }
+        .cage-14 { background-color: var(--cage-bg-7) !important; }
+        .cage-15 { background-color: var(--cage-bg-8) !important; }
+        .cage-16 { background-color: var(--cage-bg-1) !important; }
+        .cage-17 { background-color: var(--cage-bg-2) !important; }
+        .cage-18 { background-color: var(--cage-bg-3) !important; }
+        .cage-19 { background-color: var(--cage-bg-4) !important; }
+        .cage-20 { background-color: var(--cage-bg-5) !important; }
+        .cage-21 { background-color: var(--cage-bg-6) !important; }
+        .cage-22 { background-color: var(--cage-bg-7) !important; }
+        .cage-23 { background-color: var(--cage-bg-8) !important; }
+        .cage-24 { background-color: var(--cage-bg-1) !important; }
+        .cage-25 { background-color: var(--cage-bg-2) !important; }
+        .cage-26 { background-color: var(--cage-bg-3) !important; }
+        .cage-27 { background-color: var(--cage-bg-4) !important; }
+        .cage-28 { background-color: var(--cage-bg-5) !important; }
+        .cage-29 { background-color: var(--cage-bg-6) !important; }
+
+        .cage-top { 
+            border-top: 3px solid var(--cage-border-color) !important; 
+        }
+        .cage-right { 
+            border-right: 3px solid var(--cage-border-color) !important; 
+        }
+        .cage-bottom { 
+            border-bottom: 3px solid var(--cage-border-color) !important; 
+        }
+        .cage-left { 
+            border-left: 3px solid var(--cage-border-color) !important; 
+        }
+
+        .sudoku-table td:nth-child(3n).cage-right {
+            border-right: 4px solid var(--border-color) !important;
+        }
+        .sudoku-table tr:nth-child(3n) td.cage-bottom {
+            border-bottom: 4px solid var(--border-color) !important;
+        }
+
+        .numpad-container {
+            background: var(--container-bg);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .numpad {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .numpad button {
+            width: 55px;
+            height: 55px;
+            font-size: 24px;
+            font-weight: bold;
+            border-radius: 12px;
+            border: 2px solid var(--cage-border-color);
+            background: var(--container-bg);
+            color: var(--text-color);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .numpad button::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, transparent 70%);
+            transition: all 0.3s ease;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .numpad button:hover::before {
+            width: 100px;
+            height: 100px;
+        }
+
+        .numpad button:hover {
+            transform: translateY(-3px);
+            border-color: var(--selected-border);
+            box-shadow: 0 6px 20px rgba(33, 150, 243, 0.3);
+        }
+
+        .numpad button.active {
+            background: var(--selected-border);
+            color: white;
+            border-color: var(--selected-border);
+            transform: scale(0.95);
+        }
+
+        .action-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .action-buttons button {
+            padding: 14px 22px;
+            font-size: 14px;
+            border-radius: 12px;
+            border: 2px solid var(--cage-border-color);
+            background: var(--container-bg);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .action-buttons button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+        }
+
+        .action-buttons button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.7);
+            z-index: 1000;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: var(--container-bg);
+            padding: 40px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+            color: var(--text-color);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .modal-content h2 {
+            margin-bottom: 20px;
+            font-size: 2em;
+        }
+
+        .modal-content button {
+            margin: 10px;
+            padding: 15px 30px;
+            font-size: 16px;
+        }
+
+        .completion h2 {
+            color: var(--hint-filled-color);
+        }
+
+        .game-over h2 {
+            color: var(--error-border);
+        }
+
+        /* Success animations */
+        @keyframes celebrate {
+            0%, 100% { transform: scale(1) rotate(0deg); }
+            25% { transform: scale(1.1) rotate(-5deg); }
+            75% { transform: scale(1.1) rotate(5deg); }
+        }
+
+        .celebration {
+            animation: celebrate 0.6s ease-in-out;
+        }
+
+        /* Sound visualization */
+        .sound-wave {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: radial-gradient(circle, var(--selected-border), transparent);
+            opacity: 0;
+            animation: soundWave 0.5s ease-out;
+            pointer-events: none;
+        }
+
+        @keyframes soundWave {
+            0% { transform: scale(0); opacity: 1; }
+            100% { transform: scale(2); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+    <h1>🧩 Enhanced Sudoku</h1>
+    <div class="controls">
+        <select id="mode" onchange="updateDifficultyOptions()">
+            <option value="classic">Classic Sudoku</option>
+            <option value="killer">Killer Sudoku</option>
+        </select>
+        <select id="difficulty">
+            <option value="easy">Easy</option>
+            <option value="medium">Medium</option>
+            <option value="hard">Hard</option>
+            <option value="expert">Expert</option>
+            <option value="extreme">Extreme</option>
+        </select>
+        <button onclick="generateGame()">🎮 New Game</button>
+        
+        <div class="theme-selector">
+            <label>🎨 Theme:</label>
+            <div class="theme-option theme-default active" onclick="setTheme('default')" title="Default"></div>
+            <div class="theme-option theme-ocean" onclick="setTheme('ocean')" title="Ocean"></div>
+            <div class="theme-option theme-dark" onclick="setTheme('dark')" title="Dark"></div>
+            <div class="theme-option theme-sunset" onclick="setTheme('sunset')" title="Sunset"></div>
+            <div class="theme-option theme-forest" onclick="setTheme('forest')" title="Forest"></div>
+        </div>
+    </div>
+    
+    <div class="game-info">
+        <span>🎯 Mode: <span id="current-mode">Classic</span></span>
+        <span>⭐ Difficulty: <span id="current-difficulty">Easy</span></span>
+        <span class="hints-remaining">💡 Hints: <span id="hints-count">3</span>/3</span>
+        <span class="mistakes-remaining">❌ Mistakes: <span id="mistakes-count">0</span>/3</span>
+    </div>
+    
+    <div class="game-container">
+        <div class="sudoku-container">
+            <table class="sudoku-table" id="sudoku-table"></table>
+        </div>
+        
+        <div class="numpad-container">
+            <div class="numpad" id="numpad">
+                <button onclick="inputNumber(1)">1</button>
+                <button onclick="inputNumber(2)">2</button>
+                <button onclick="inputNumber(3)">3</button>
+                <button onclick="inputNumber(4)">4</button>
+                <button onclick="inputNumber(5)">5</button>
+                <button onclick="inputNumber(6)">6</button>
+                <button onclick="inputNumber(7)">7</button>
+                <button onclick="inputNumber(8)">8</button>
+                <button onclick="inputNumber(9)">9</button>
+            </div>
+            <div class="action-buttons">
+                <button class="notes-btn" onclick="toggleNotesMode()">📝 Notes</button>
+                <button class="hint-btn" onclick="getHint()" id="hint-btn">💡 Hint (3)</button>
+                <button class="undo-btn" onclick="undo()" id="undo-btn">↶ Undo</button>
+                <button class="clear-btn" onclick="clearCell()">🗑️ Clear</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Completion Modal -->
+    <div class="modal" id="completion-modal">
+        <div class="modal-content completion">
+            <h2>🎉 Congratulations!</h2>
+            <p>You've successfully completed the puzzle!</p>
+            <button onclick="closeModal()">Continue</button>
+            <button onclick="generateGame(); closeModal();">New Game</button>
+        </div>
+    </div>
+
+    <!-- Game Over Modal -->
+    <div class="modal" id="game-over-modal">
+        <div class="modal-content game-over">
+            <h2>💀 Game Over!</h2>
+            <p>You've made 3 mistakes. Better luck next time!</p>
+            <button onclick="generateGame(); closeModal();">New Game</button>
+            <button onclick="restartGame(); closeModal();">Try Again</button>
+        </div>
+    </div>
+
+    <script>
+        let currentGame;
+        let selectedCell = null;
+        let notesMode = false;
+        let moveHistory = [];
+        let hintsRemaining = 3;
+        let mistakesCount = 0;
+        let gameOver = false;
+        let currentTheme = 'default';
+
+        // Sound effects (using Web Audio API)
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        
+        function playSound(frequency, duration = 0.1, type = 'sine') {
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            oscillator.frequency.value = frequency;
+            oscillator.type = type;
+            
+            gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + duration);
+            
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + duration);
+            
+            // Visual feedback
+            showSoundWave();
+        }
+
+        function showSoundWave() {
+            const wave = document.createElement('div');
+            wave.className = 'sound-wave';
+            document.body.appendChild(wave);
+            setTimeout(() => document.body.removeChild(wave), 500);
+        }
+
+        function playCelebrationSound() {
+            // Play a sequence of notes for celebration
+            const notes = [523, 659, 784, 1047]; // C, E, G, C (one octave higher)
+            notes.forEach((note, index) => {
+                setTimeout(() => playSound(note, 0.3, 'triangle'), index * 100);
+            });
+        }
+
+        function playErrorSound() {
+            playSound(200, 0.5, 'sawtooth');
+        }
+
+        function playClickSound() {
+            playSound(800, 0.05, 'square');
+        }
+
+        function playHintSound() {
+            playSound(1000, 0.2, 'triangle');
+        }
+
+        function setTheme(theme) {
+            currentTheme = theme;
+            document.body.className = theme === 'default' ? '' : `theme-${theme}`;
+            
+            // Update active theme indicator
+            document.querySelectorAll('.theme-option').forEach(option => {
+                option.classList.remove('active');
+            });
+            document.querySelector(`.theme-${theme}`).classList.add('active');
+            
+            // Save theme preference
+            localStorage.setItem('sudoku-theme', theme);
+        }
+
+        class SudokuGame {
+            constructor(mode, difficulty) {
+                this.mode = mode;
+                this.difficulty = difficulty;
+                this.completedGrid = this.generateCompletedGrid();
+                this.userGrid = Array(9).fill().map(() => Array(9).fill(0));
+                this.notesGrid = Array(9).fill().map(() => Array(9).fill().map(() => Array(9).fill(false)));
+                this.hintCells = Array(9).fill().map(() => Array(9).fill(false));
+                
+                if (mode === 'killer') {
+                    this.cages = this.generateKillerCages();
+                    this.cageSums = this.calculateCageSums();
+                    this.puzzleGrid = this.generateKillerPuzzleGrid();
+                } else if (mode === 'classic') {
+                    this.puzzleGrid = this.generatePuzzleGrid();
+                }
+                this.render();
+            }
+
+            generateCompletedGrid() {
+                const grid = Array(9).fill().map(() => Array(9).fill(0));
+                
+                function isValid(grid, row, col, num) {
+                    // Check row
+                    for (let c = 0; c < 9; c++) {
+                        if (grid[row][c] === num) return false;
+                    }
+                    
+                    // Check column
+                    for (let r = 0; r < 9; r++) {
+                        if (grid[r][col] === num) return false;
+                    }
+                    
+                    // Check 3x3 box
+                    const startRow = Math.floor(row / 3) * 3;
+                    const startCol = Math.floor(col / 3) * 3;
+                    for (let r = startRow; r < startRow + 3; r++) {
+                        for (let c = startCol; c < startCol + 3; c++) {
+                            if (grid[r][c] === num) return false;
+                        }
+                    }
+                    return true;
+                }
+                
+                function solve(grid) {
+                    for (let row = 0; row < 9; row++) {
+                        for (let col = 0; col < 9; col++) {
+                            if (grid[row][col] === 0) {
+                                const numbers = shuffle([1, 2, 3, 4, 5, 6, 7, 8, 9]);
+                                for (let num of numbers) {
+                                    if (isValid(grid, row, col, num)) {
+                                        grid[row][col] = num;
+                                        if (solve(grid)) return true;
+                                        grid[row][col] = 0;
+                                    }
+                                }
+                                return false;
+                            }
+                        }
+                    }
+                    return true;
+                }
+                
+                solve(grid);
+                return grid;
+            }
+
+            generatePuzzleGrid() {
+                const clues = {
+                    'easy': 45,
+                    'medium': 38,
+                    'hard': 32,
+                    'expert': 28,
+                    'extreme': 24
+                }[this.difficulty] || 38;
+                
+                const puzzleGrid = JSON.parse(JSON.stringify(this.completedGrid));
+                let toRemove = 81 - clues;
+                
+                const positions = [];
+                for (let i = 0; i < 9; i++) {
+                    for (let j = 0; j < 9; j++) {
+                        positions.push([i, j]);
+                    }
+                }
+                shuffle(positions);
+                
+                for (let [row, col] of positions) {
+                    if (toRemove <= 0) break;
+                    puzzleGrid[row][col] = 0;
+                    toRemove--;
+                }
+                
+                return puzzleGrid;
+            }
+
+            generateKillerCages() {
+                const assigned = Array(9).fill().map(() => Array(9).fill(false));
+                const cages = [];
+                
+                const maxCageSize = {
+                    'easy': 3,
+                    'medium': 4,
+                    'hard': 5,
+                    'expert': 6
+                }[this.difficulty] || 4;
+
+                while (true) {
+                    const unassignedCells = [];
+                    for (let i = 0; i < 9; i++) {
+                        for (let j = 0; j < 9; j++) {
+                            if (!assigned[i][j]) {
+                                unassignedCells.push([i, j]);
+                            }
+                        }
+                    }
+                    
+                    if (unassignedCells.length === 0) break;
+
+                    const startCell = unassignedCells[Math.floor(Math.random() * unassignedCells.length)];
+                    const cage = [startCell];
+                    assigned[startCell[0]][startCell[1]] = true;
+                    const targetSize = Math.min(
+                        Math.floor(Math.random() * maxCageSize) + 1, 
+                        unassignedCells.length
+                    );
+
+                    while (cage.length < targetSize) {
+                        const neighbors = [];
+                        
+                        for (let [r, c] of cage) {
+                            const cellNeighbors = this.getUnassignedNeighbors([r, c], assigned);
+                            neighbors.push(...cellNeighbors);
+                        }
+                        
+                        const uniqueNeighbors = neighbors.filter((neighbor, index, self) =>
+                            index === self.findIndex(n => n[0] === neighbor[0] && n[1] === neighbor[1])
+                        );
+                        
+                        if (uniqueNeighbors.length === 0) break;
+                        
+                        const nextCell = uniqueNeighbors[Math.floor(Math.random() * uniqueNeighbors.length)];
+                        cage.push(nextCell);
+                        assigned[nextCell[0]][nextCell[1]] = true;
+                    }
+                    
+                    cages.push(cage);
+                }
+                
+                return cages;
+            }
+
+            generateKillerPuzzleGrid() {
+                const puzzleGrid = Array(9).fill().map(() => Array(9).fill(0));
+                const preFilledCount = {
+                    'easy': 15,    
+                    'medium': 8,   
+                    'hard': 4,     
+                    'expert': 2    
+                }[this.difficulty] || 8;
+                
+                for (let i = 0; i < this.cages.length; i++) {
+                    const cage = this.cages[i];
+                    if (cage.length === 1) {
+                        const [row, col] = cage[0];
+                        puzzleGrid[row][col] = this.completedGrid[row][col];
+                    }
+                }
+                
+                const positions = [];
+                for (let i = 0; i < 9; i++) {
+                    for (let j = 0; j < 9; j++) {
+                        if (puzzleGrid[i][j] === 0) { 
+                            positions.push([i, j]);
+                        }
+                    }
+                }
+                shuffle(positions);
+
+                let filled = 0;
+                for (let [row, col] of positions) {
+                    if (filled >= preFilledCount) break;
+                    puzzleGrid[row][col] = this.completedGrid[row][col];
+                    filled++;
+                }
+
+                return puzzleGrid;
+            }
+
+            getUnassignedNeighbors([row, col], assigned) {
+                const neighbors = [
+                    [row - 1, col],
+                    [row + 1, col],
+                    [row, col - 1],
+                    [row, col + 1]
+                ];
+                
+                return neighbors.filter(([r, c]) => 
+                    r >= 0 && r < 9 && c >= 0 && c < 9 && !assigned[r][c]
+                );
+            }
+
+            calculateCageSums() {
+                const sums = {};
+                this.cages.forEach((cage, index) => {
+                    sums[index] = cage.reduce((sum, [r, c]) => sum + this.completedGrid[r][c], 0);
+                });
+                return sums;
+            }
+
+            render() {
+                const table = document.getElementById('sudoku-table');
+                table.innerHTML = '';
+
+                if (this.mode === 'killer') {
+                    this.renderKillerSudoku(table);
+                } else {
+                    this.renderClassicSudoku(table);
+                }
+            }
+
+            renderKillerSudoku(table) {
+                const cageMap = Array(9).fill().map(() => Array(9).fill(-1));
+                this.cages.forEach((cage, index) => {
+                    cage.forEach(([r, c]) => cageMap[r][c] = index);
+                });
+
+                for (let i = 0; i < 9; i++) {
+                    const row = table.insertRow();
+                    for (let j = 0; j < 9; j++) {
+                        const cell = row.insertCell();
+                        const cageIndex = cageMap[i][j];
+                        
+                        // Add cage background color
+                        cell.classList.add(`cage-${cageIndex % 8}`);
+                        
+                        if (this.isTopLeftCell(i, j, cageIndex)) {
+                            const sumSpan = document.createElement('span');
+                            sumSpan.className = 'cage-sum';
+                            sumSpan.textContent = this.cageSums[cageIndex];
+                            cell.appendChild(sumSpan);
+                        }
+                        
+                        if (j === 0 || cageMap[i][j] !== cageMap[i][j - 1]) {
+                            cell.classList.add('cage-left');
+                        }
+                        if (i === 0 || cageMap[i][j] !== cageMap[i - 1][j]) {
+                            cell.classList.add('cage-top');
+                        }
+                        if (j === 8 || cageMap[i][j] !== cageMap[i][j + 1]) {
+                            cell.classList.add('cage-right');
+                        }
+                        if (i === 8 || cageMap[i][j] !== cageMap[i + 1][j]) {
+                            cell.classList.add('cage-bottom');
+                        }
+
+                        this.setupCell(cell, i, j);
+                    }
+                }
+            }
+
+            renderClassicSudoku(table) {
+                for (let i = 0; i < 9; i++) {
+                    const row = table.insertRow();
+                    for (let j = 0; j < 9; j++) {
+                        const cell = row.insertCell();
+                        this.setupCell(cell, i, j);
+                    }
+                }
+            }
+
+            setupCell(cell, row, col) {
+                cell.onclick = () => {
+                    playClickSound();
+                    this.selectCell(row, col);
+                };
+                cell.dataset.row = row;
+                cell.dataset.col = col;
+                this.updateCellDisplay(row, col);
+            }
+
+            updateCellDisplay(row, col) {
+                const cell = document.querySelector(`td[data-row="${row}"][data-col="${col}"]`);
+                cell.innerHTML = '';
+                
+                if (this.mode === 'killer') {
+                    const cageMap = Array(9).fill().map(() => Array(9).fill(-1));
+                    this.cages.forEach((cage, index) => {
+                        cage.forEach(([r, c]) => cageMap[r][c] = index);
+                    });
+                    const cageIndex = cageMap[row][col];
+                    if (this.isTopLeftCell(row, col, cageIndex)) {
+                        const sumSpan = document.createElement('span');
+                        sumSpan.className = 'cage-sum';
+                        sumSpan.textContent = this.cageSums[cageIndex];
+                        cell.appendChild(sumSpan);
+                    }
+                }
+
+                const userValue = this.userGrid[row][col];
+                const preFilledValue = this.puzzleGrid[row][col];
+                const isHint = this.hintCells[row][col];
+                cell.classList.remove('error', 'completed');
+
+                if (preFilledValue !== 0) {
+                    const mainDiv = document.createElement('div');
+                    mainDiv.className = 'main-number pre-filled';
+                    mainDiv.textContent = preFilledValue;
+                    cell.appendChild(mainDiv);
+                } else if (userValue !== 0) {
+                    const mainDiv = document.createElement('div');
+                    mainDiv.className = `main-number ${isHint ? 'hint-filled' : 'user-filled'}`;
+                    mainDiv.textContent = userValue;
+                    cell.appendChild(mainDiv);
+                    
+                    // Check if this is a wrong answer
+                    if (this.completedGrid[row][col] !== userValue) {
+                        cell.classList.add('error');
+                    }
+                } else {
+                    const notesDiv = document.createElement('div');
+                    notesDiv.className = 'notes';
+                    for (let i = 0; i < 9; i++) {
+                        const noteDiv = document.createElement('div');
+                        noteDiv.className = 'note';
+                        if (this.notesGrid[row][col][i]) {
+                            noteDiv.textContent = i + 1;
+                        }
+                        notesDiv.appendChild(noteDiv);
+                    }
+                    cell.appendChild(notesDiv);
+                }
+            }
+
+            selectCell(row, col) {
+                document.querySelectorAll('.sudoku-table td').forEach(cell => {
+                    cell.classList.remove('selected');
+                });
+                const cell = document.querySelector(`td[data-row="${row}"][data-col="${col}"]`);
+                cell.classList.add('selected');
+                selectedCell = { row, col };
+            }
+
+            inputNumber(num) {
+                if (!selectedCell || gameOver) return;
+                const { row, col } = selectedCell;
+                if (this.puzzleGrid[row][col] !== 0) return;
+                
+                this.saveState();
+
+                if (notesMode) {
+                    this.notesGrid[row][col][num - 1] = !this.notesGrid[row][col][num - 1];
+                    playClickSound();
+                } else {
+                    const oldValue = this.userGrid[row][col];
+                    this.userGrid[row][col] = this.userGrid[row][col] === num ? 0 : num;
+                    
+                    // Clear notes for this cell when placing a number
+                    if (this.userGrid[row][col] !== 0) {
+                        this.notesGrid[row][col] = Array(9).fill(false);
+                        
+                        // Remove this number from notes in same row, column, and box
+                        this.removeFromNotes(row, col, num);
+                        
+                        // Add animation class for new input
+                        setTimeout(() => {
+                            const cell = document.querySelector(`td[data-row="${row}"][data-col="${col}"]`);
+                            const numberElement = cell.querySelector('.main-number');
+                            if (numberElement) {
+                                numberElement.classList.add('new-input');
+                                setTimeout(() => numberElement.classList.remove('new-input'), 400);
+                            }
+                        }, 10);
+                    }
+                    
+                    // Check if it's a mistake
+                    if (this.userGrid[row][col] !== 0 && this.completedGrid[row][col] !== this.userGrid[row][col]) {
+                        mistakesCount++;
+                        document.getElementById('mistakes-count').textContent = mistakesCount;
+                        playErrorSound();
+                        
+                        if (mistakesCount >= 3) {
+                            gameOver = true;
+                            setTimeout(() => {
+                                document.getElementById('game-over-modal').style.display = 'block';
+                            }, 500);
+                        }
+                    } else if (this.userGrid[row][col] !== 0) {
+                        playSound(600, 0.1, 'sine'); // Success sound
+                        this.checkCageCompletion(row, col);
+                        this.checkBoxCompletion(row, col);
+                    }
+                }
+                
+                this.updateCellDisplay(row, col);
+                setTimeout(() => this.checkCompletion(), 100);
+            }
+
+            checkCageCompletion(row, col) {
+                if (this.mode !== 'killer') return;
+                
+                const cageMap = Array(9).fill().map(() => Array(9).fill(-1));
+                this.cages.forEach((cage, index) => {
+                    cage.forEach(([r, c]) => cageMap[r][c] = index);
+                });
+                
+                const cageIndex = cageMap[row][col];
+                const cage = this.cages[cageIndex];
+                
+                // Check if cage is completed
+                let isComplete = true;
+                let sum = 0;
+                for (let [r, c] of cage) {
+                    const value = this.userGrid[r][c] || this.puzzleGrid[r][c];
+                    if (value === 0) {
+                        isComplete = false;
+                        break;
+                    }
+                    sum += value;
+                }
+                
+                if (isComplete && sum === this.cageSums[cageIndex]) {
+                    // Animate cage completion
+                    cage.forEach(([r, c]) => {
+                        const cell = document.querySelector(`td[data-row="${r}"][data-col="${c}"]`);
+                        cell.classList.add('cage-completed');
+                        setTimeout(() => cell.classList.remove('cage-completed'), 1000);
+                    });
+                    playSound(800, 0.3, 'triangle');
+                }
+            }
+
+            checkBoxCompletion(row, col) {
+                const startRow = Math.floor(row / 3) * 3;
+                const startCol = Math.floor(col / 3) * 3;
+                
+                // Check if 3x3 box is completed
+                let isComplete = true;
+                const numbers = new Set();
+                
+                for (let r = startRow; r < startRow + 3; r++) {
+                    for (let c = startCol; c < startCol + 3; c++) {
+                        const value = this.userGrid[r][c] || this.puzzleGrid[r][c];
+                        if (value === 0 || numbers.has(value)) {
+                            isComplete = false;
+                            break;
+                        }
+                        numbers.add(value);
+                    }
+                    if (!isComplete) break;
+                }
+                
+                if (isComplete && numbers.size === 9) {
+                    // Animate box completion
+                    for (let r = startRow; r < startRow + 3; r++) {
+                        for (let c = startCol; c < startCol + 3; c++) {
+                            const cell = document.querySelector(`td[data-row="${r}"][data-col="${c}"]`);
+                            cell.classList.add('box-completed');
+                            setTimeout(() => cell.classList.remove('box-completed'), 1200);
+                        }
+                    }
+                    playSound(1000, 0.4, 'triangle');
+                }
+            }
+
+            removeFromNotes(row, col, num) {
+                // Remove from same row
+                for (let c = 0; c < 9; c++) {
+                    if (c !== col && this.userGrid[row][c] === 0 && this.puzzleGrid[row][c] === 0) {
+                        this.notesGrid[row][c][num - 1] = false;
+                        this.updateCellDisplay(row, c);
+                    }
+                }
+                
+                // Remove from same column
+                for (let r = 0; r < 9; r++) {
+                    if (r !== row && this.userGrid[r][col] === 0 && this.puzzleGrid[r][col] === 0) {
+                        this.notesGrid[r][col][num - 1] = false;
+                        this.updateCellDisplay(r, col);
+                    }
+                }
+                
+                // Remove from same 3x3 box
+                const startRow = Math.floor(row / 3) * 3;
+                const startCol = Math.floor(col / 3) * 3;
+                for (let r = startRow; r < startRow + 3; r++) {
+                    for (let c = startCol; c < startCol + 3; c++) {
+                        if ((r !== row || c !== col) && this.userGrid[r][c] === 0 && this.puzzleGrid[r][c] === 0) {
+                            this.notesGrid[r][c][num - 1] = false;
+                            this.updateCellDisplay(r, c);
+                        }
+                    }
+                }
+                
+                // For killer sudoku, remove from same cage
+                if (this.mode === 'killer') {
+                    const cageMap = Array(9).fill().map(() => Array(9).fill(-1));
+                    this.cages.forEach((cage, index) => {
+                        cage.forEach(([r, c]) => cageMap[r][c] = index);
+                    });
+                    
+                    const cageIndex = cageMap[row][col];
+                    const cage = this.cages[cageIndex];
+                    
+                    for (let [r, c] of cage) {
+                        if ((r !== row || c !== col) && this.userGrid[r][c] === 0 && this.puzzleGrid[r][c] === 0) {
+                            this.notesGrid[r][c][num - 1] = false;
+                            this.updateCellDisplay(r, c);
+                        }
+                    }
+                }
+            }
+
+            clearCell() {
+                if (!selectedCell || gameOver) return;
+                
+                const { row, col } = selectedCell;
+                if (this.puzzleGrid[row][col] !== 0) return;
+
+                this.saveState();
+                this.userGrid[row][col] = 0;
+                this.notesGrid[row][col] = Array(9).fill(false);
+                this.hintCells[row][col] = false;
+                this.updateCellDisplay(row, col);
+                playClickSound();
+            }
+
+            getHint() {
+                if (hintsRemaining <= 0 || !selectedCell || gameOver) return;
+                
+                const { row, col } = selectedCell;
+                
+                // Only give hint for empty cells
+                if (this.puzzleGrid[row][col] !== 0 || this.userGrid[row][col] !== 0) return;
+                
+                this.saveState();
+                this.userGrid[row][col] = this.completedGrid[row][col];
+                this.hintCells[row][col] = true;
+                this.notesGrid[row][col] = Array(9).fill(false);
+                
+                // Remove this number from notes in related cells
+                this.removeFromNotes(row, col, this.completedGrid[row][col]);
+                
+                hintsRemaining--;
+                document.getElementById('hints-count').textContent = hintsRemaining;
+                document.getElementById('hint-btn').textContent = `💡 Hint (${hintsRemaining})`;
+                
+                if (hintsRemaining === 0) {
+                    document.getElementById('hint-btn').disabled = true;
+                }
+                
+                this.updateCellDisplay(row, col);
+                playHintSound();
+                
+                // Add animation for hint
+                setTimeout(() => {
+                    const cell = document.querySelector(`td[data-row="${row}"][data-col="${col}"]`);
+                    const numberElement = cell.querySelector('.main-number');
+                    if (numberElement) {
+                        numberElement.classList.add('new-input');
+                        setTimeout(() => numberElement.classList.remove('new-input'), 400);
+                    }
+                }, 10);
+                
+                this.checkCageCompletion(row, col);
+                this.checkBoxCompletion(row, col);
+                setTimeout(() => this.checkCompletion(), 100);
+            }
+
+            saveState() {
+                moveHistory.push({
+                    userGrid: JSON.parse(JSON.stringify(this.userGrid)),
+                    notesGrid: JSON.parse(JSON.stringify(this.notesGrid)),
+                    hintCells: JSON.parse(JSON.stringify(this.hintCells)),
+                    hintsRemaining: hintsRemaining,
+                    mistakesCount: mistakesCount
+                });
+                if (moveHistory.length > 50) moveHistory.shift();
+                document.getElementById('undo-btn').disabled = moveHistory.length === 0;
+            }
+
+            undo() {
+                if (moveHistory.length === 0 || gameOver) return;
+                
+                const lastState = moveHistory.pop();
+                this.userGrid = lastState.userGrid;
+                this.notesGrid = lastState.notesGrid;
+                this.hintCells = lastState.hintCells;
+                hintsRemaining = lastState.hintsRemaining;
+                mistakesCount = lastState.mistakesCount;
+                
+                document.getElementById('hints-count').textContent = hintsRemaining;
+                document.getElementById('hint-btn').textContent = `💡 Hint (${hintsRemaining})`;
+                document.getElementById('hint-btn').disabled = hintsRemaining === 0;
+                document.getElementById('undo-btn').disabled = moveHistory.length === 0;
+                document.getElementById('mistakes-count').textContent = mistakesCount;
+                
+                for (let i = 0; i < 9; i++) {
+                    for (let j = 0; j < 9; j++) {
+                        this.updateCellDisplay(i, j);
+                    }
+                }
+                
+                playClickSound();
+            }
+
+            isTopLeftCell(row, col, cageIndex) {
+                const cage = this.cages[cageIndex];
+                const minRow = Math.min(...cage.map(([r, _]) => r));
+                const topCells = cage.filter(([r, _]) => r === minRow);
+                const minCol = Math.min(...topCells.map(([_, c]) => c));
+                return row === minRow && col === minCol;
+            }
+
+            checkCompletion() {
+                if (gameOver) return false;
+                
+                for (let i = 0; i < 9; i++) {
+                    for (let j = 0; j < 9; j++) {
+                        const preFilledValue = this.puzzleGrid[i][j];
+                        const userValue = this.userGrid[i][j];
+                        
+                        if (preFilledValue === 0 && userValue === 0) {
+                            return false;
+                        }
+                    }
+                }
+                
+                if (this.isSolutionValid()) {
+                    document.querySelectorAll('.sudoku-table td').forEach(cell => {
+                        cell.classList.add('completed', 'celebration');
+                        cell.classList.remove('error');
+                    });
+                    
+                    playCelebrationSound();
+                    
+                    setTimeout(() => {
+                        document.getElementById('completion-modal').style.display = 'block';
+                    }, 1000);
+                    
+                    return true;
+                }
+                
+                return false;
+            }
+
+            isSolutionValid() {
+                const grid = Array(9).fill().map(() => Array(9).fill(0));
+                for (let i = 0; i < 9; i++) {
+                    for (let j = 0; j < 9; j++) {
+                        if (this.puzzleGrid[i][j] !== 0) {
+                            grid[i][j] = this.puzzleGrid[i][j];
+                        } else {
+                            grid[i][j] = this.userGrid[i][j];
+                        }
+                        if (grid[i][j] < 1 || grid[i][j] > 9) return false;
+                    }
+                }
+                
+                for (let i = 0; i < 9; i++) {
+                    if (!this.isUnique(grid[i]) || !this.isUnique(grid.map(row => row[i]))) {
+                        return false;
+                    }
+                }
+
+                for (let sr = 0; sr < 9; sr += 3) {
+                    for (let sc = 0; sc < 9; sc += 3) {
+                        const subgrid = [];
+                        for (let i = 0; i < 3; i++) {
+                            for (let j = 0; j < 3; j++) {
+                                subgrid.push(grid[sr + i][sc + j]);
+                            }
+                        }
+                        if (!this.isUnique(subgrid)) return false;
+                    }
+                }
+                
+                if (this.mode === 'killer') {
+                    for (let cageIndex in this.cageSums) {
+                        const cage = this.cages[cageIndex];
+                        const cageValues = cage.map(([r, c]) => grid[r][c]);
+                        const sum = cageValues.reduce((s, v) => s + v, 0);
+                        
+                        if (sum !== this.cageSums[cageIndex] || !this.isUnique(cageValues)) {
+                            return false;
+                        }
+                    }
+                }
+
+                return true;
+            }
+
+            isUnique(arr) {
+                const filtered = arr.filter(x => x > 0);
+                return new Set(filtered).size === filtered.length && filtered.length === arr.length;
+            }
+        }
+
+        function shuffle(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        function updateDifficultyOptions() {
+            const mode = document.getElementById('mode').value;
+            const difficultySelect = document.getElementById('difficulty');
+            difficultySelect.innerHTML = '';
+            
+            if (mode === 'classic') {
+                const classicLevels = ['easy', 'medium', 'hard', 'expert', 'extreme'];
+                classicLevels.forEach(level => {
+                    const option = document.createElement('option');
+                    option.value = level;
+                    option.textContent = level.charAt(0).toUpperCase() + level.slice(1);
+                    difficultySelect.appendChild(option);
+                });
+            } else {
+                const killerLevels = ['easy', 'medium', 'hard', 'expert'];
+                killerLevels.forEach(level => {
+                    const option = document.createElement('option');
+                    option.value = level;
+                    option.textContent = level.charAt(0).toUpperCase() + level.slice(1);
+                    difficultySelect.appendChild(option);
+                });
+            }
+        }
+
+        function generateGame() {
+            const mode = document.getElementById('mode').value;
+            const difficulty = document.getElementById('difficulty').value;
+            
+            currentGame = new SudokuGame(mode, difficulty);
+            selectedCell = null;
+            moveHistory = [];
+            hintsRemaining = 3;
+            mistakesCount = 0;
+            gameOver = false;
+            notesMode = false;
+            
+            document.getElementById('current-mode').textContent = mode.charAt(0).toUpperCase() + mode.slice(1);
+            document.getElementById('current-difficulty').textContent = difficulty.charAt(0).toUpperCase() + difficulty.slice(1);
+            document.getElementById('hints-count').textContent = hintsRemaining;
+            document.getElementById('hint-btn').textContent = `💡 Hint (${hintsRemaining})`;
+            document.getElementById('hint-btn').disabled = false;
+            document.getElementById('undo-btn').disabled = true;
+            document.getElementById('mistakes-count').textContent = mistakesCount;
+            
+            updateNotesButton();
+            closeModal();
+            playSound(440, 0.2, 'sine'); // New game sound
+        }
+
+        function restartGame() {
+            if (!currentGame) return;
+            
+            // Reset game state but keep the same puzzle
+            currentGame.userGrid = Array(9).fill().map(() => Array(9).fill(0));
+            currentGame.notesGrid = Array(9).fill().map(() => Array(9).fill().map(() => Array(9).fill(false)));
+            currentGame.hintCells = Array(9).fill().map(() => Array(9).fill(false));
+            
+            selectedCell = null;
+            moveHistory = [];
+            hintsRemaining = 3;
+            mistakesCount = 0;
+            gameOver = false;
+            notesMode = false;
+            
+            document.getElementById('hints-count').textContent = hintsRemaining;
+            document.getElementById('hint-btn').textContent = `💡 Hint (${hintsRemaining})`;
+            document.getElementById('hint-btn').disabled = false;
+            document.getElementById('undo-btn').disabled = true;
+            document.getElementById('mistakes-count').textContent = mistakesCount;
+            
+            // Re-render the grid
+            for (let i = 0; i < 9; i++) {
+                for (let j = 0; j < 9; j++) {
+                    currentGame.updateCellDisplay(i, j);
+                }
+            }
+            
+            updateNotesButton();
+            playSound(440, 0.2, 'sine'); // Restart sound
+        }
+
+        function inputNumber(num) {
+            if (currentGame) {
+                currentGame.inputNumber(num);
+            }
+        }
+
+        function toggleNotesMode() {
+            notesMode = !notesMode;
+            updateNotesButton();
+            playClickSound();
+        }
+
+        function updateNotesButton() {
+            const btn = document.querySelector('.notes-btn');
+            if (notesMode) {
+                btn.classList.add('active');
+                btn.textContent = '📝 Notes ON';
+                btn.style.background = 'var(--selected-border)';
+                btn.style.color = 'white';
+            } else {
+                btn.classList.remove('active');
+                btn.textContent = '📝 Notes';
+                btn.style.background = 'var(--container-bg)';
+                btn.style.color = 'var(--text-color)';
+            }
+        }
+
+        function getHint() {
+            if (currentGame) {
+                currentGame.getHint();
+            }
+        }
+
+        function undo() {
+            if (currentGame) {
+                currentGame.undo();
+            }
+        }
+
+        function clearCell() {
+            if (currentGame) {
+                currentGame.clearCell();
+            }
+        }
+
+        function closeModal() {
+            document.getElementById('completion-modal').style.display = 'none';
+            document.getElementById('game-over-modal').style.display = 'none';
+        }
+        
+        // Enhanced keyboard controls
+        document.addEventListener('keydown', (e) => {
+            // Resume audio context on user interaction
+            if (audioContext.state === 'suspended') {
+                audioContext.resume();
+            }
+            
+            if (e.key >= '1' && e.key <= '9') {
+                inputNumber(parseInt(e.key));
+            } else if (e.key === 'Delete' || e.key === 'Backspace') {
+                clearCell();
+            } else if (e.key === 'n' || e.key === 'N') {
+                toggleNotesMode();
+            } else if (e.key === 'h' || e.key === 'H') {
+                getHint();
+            } else if (e.ctrlKey && e.key === 'z') {
+                e.preventDefault();
+                undo();
+            } else if (e.key === 'Escape') {
+                closeModal();
+            } else if (e.key === ' ') {
+                e.preventDefault();
+                if (selectedCell && currentGame) {
+                    currentGame.clearCell();
+                }
+            }
+            
+            // Arrow key navigation
+            if (selectedCell && ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.key)) {
+                e.preventDefault();
+                let { row, col } = selectedCell;
+                
+                switch (e.key) {
+                    case 'ArrowUp':
+                        row = Math.max(0, row - 1);
+                        break;
+                    case 'ArrowDown':
+                        row = Math.min(8, row + 1);
+                        break;
+                    case 'ArrowLeft':
+                        col = Math.max(0, col - 1);
+                        break;
+                    case 'ArrowRight':
+                        col = Math.min(8, col + 1);
+                        break;
+                }
+                
+                if (currentGame) {
+                    currentGame.selectCell(row, col);
+                }
+            }
+        });
+        
+        // Load saved theme on page load
+        window.onload = function() {
+            updateDifficultyOptions();
+            
+            // Load saved theme
+            const savedTheme = localStorage.getItem('sudoku-theme') || 'default';
+            setTheme(savedTheme);
+            
+            // Resume audio context
+            document.addEventListener('click', () => {
+                if (audioContext.state === 'suspended') {
+                    audioContext.resume();
+                }
+            }, { once: true });
+            
+            generateGame();
+        };
+
+        // Add number button interactions
+        document.addEventListener('DOMContentLoaded', function() {
+            const numpadButtons = document.querySelectorAll('.numpad button');
+            numpadButtons.forEach(button => {
+                button.addEventListener('mousedown', function() {
+                    this.classList.add('active');
+                });
+                
+                button.addEventListener('mouseup', function() {
+                    setTimeout(() => {
+                        this.classList.remove('active');
+                    }, 100);
+                });
+                
+                button.addEventListener('mouseleave', function() {
+                    this.classList.remove('active');
+                });
+            });
+        });
+    </script>
+</body>
+</html>
